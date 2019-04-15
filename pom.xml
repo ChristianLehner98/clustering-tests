@@ -11,6 +11,7 @@
   <modules>
     <module>save-and-read-persistent-state</module>
     <module>clustering-tests</module>
+    <module>on-termination-example</module>
   </modules>
 
   <properties>

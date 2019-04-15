@@ -47,13 +47,12 @@ public class Test1 {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        env.setParallelism(8);
+        env.setParallelism(1);
 
         //vertices come from a CountingVertexSource with predefined parameters (can be changed manually)
-        DataStream<Tuple2<Long, Set<Long>>> input = env.addSource(new CountingVertexSource(15001, 0.002, 20));
+        DataStream<Tuple2<Long, Set<Long>>> input = env.addSource(new CountingVertexSource(151, 0.1, 1000));
 
-        KeyedStream<Tuple2<Long, Set<Long>>, Long> keyedInput = input
-            .keyBy(new KeySelector<Tuple2<Long, Set<Long>>, Long>() {
+        KeyedStream<Tuple2<Long, Set<Long>>, Long> keyedInput = input.keyBy(new KeySelector<Tuple2<Long, Set<Long>>, Long>() {
                 @Override
                 public Long getKey(Tuple2<Long, Set<Long>> value) throws Exception {
                     return value.f0;
@@ -61,7 +60,7 @@ public class Test1 {
             });
 
         WindowedStream<Tuple2<Long, Set<Long>>, Long, TimeWindow> windowedInput = keyedInput
-            .timeWindow(Time.milliseconds(30000));
+            .timeWindow(Time.milliseconds(10000));
 
         DataStream<String> results = windowedInput.iterateSync(
             new ClusteringWindowLoopFunction(), new FixpointIterationTermination(),

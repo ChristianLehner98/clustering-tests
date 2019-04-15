@@ -11,7 +11,6 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.state.MapState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeutils.base.LongSerializer;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -34,6 +33,15 @@ import org.apache.flink.streaming.runtime.tasks.progress.FixpointIterationTermin
 import org.apache.flink.types.Either;
 import org.apache.flink.util.Collector;
 
+/**
+ * This example should demonstrate my problem with the use of state in the WindowLoopFunction. It should show
+ * that I am unable to actually read out the values from the persistent state in the entry and step functions.
+ * The algorithm itself is a naive ConnectedComponents algorithm dealing with additions of edges to
+ * a graph over time. Deletions are not possible here.
+ *
+ * The algorithm itself is also quite irrelevant and not the point of this example. I do not guarantee that
+ * it would actually work but it should show where my problem is.
+ */
 public class SaveAndReadPersistentStateCCExample {
 
 
@@ -151,7 +159,8 @@ public class SaveAndReadPersistentStateCCExample {
 
             initState(loopContext);
 
-            //old data does not actually get loaded
+            //old data does not actually get loaded properly, with higher parallelism it works
+            //in some instances, but not reliably
             System.out.println("LOAD :: persistent graph: " + persistentGraph.entries() + "; persistent components: " + persistentComponents.entries());
 
             Map<Long, List<Long>> adjacencyList = neighborsPerContext.get(loopContext.getContext());

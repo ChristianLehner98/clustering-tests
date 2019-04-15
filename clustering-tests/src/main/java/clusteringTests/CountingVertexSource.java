@@ -35,9 +35,9 @@ public class CountingVertexSource extends RichSourceFunction<Tuple2<Long, Set<Lo
                     neighbors.add(otherVertex + 1);
                 }
             }
-            ctx.collectWithTimestamp(new Tuple2<>((currentVertex++) + 1, neighbors), currentVertex*milliseconds);
-            if(currentVertex*milliseconds - 1 > currentWatermark + 100 || currentVertex == vertices) {
-                currentWatermark = currentVertex*milliseconds - 1;
+            ctx.collectWithTimestamp(new Tuple2<>((currentVertex++) + 1, neighbors), currentVertex * milliseconds);
+            if (currentVertex * milliseconds - 1 > currentWatermark + 100 || currentVertex == vertices) {
+                currentWatermark = currentVertex * milliseconds - 1;
                 ctx.emitWatermark(new Watermark(currentWatermark));
             }
             Thread.sleep(milliseconds);

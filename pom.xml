@@ -12,6 +12,7 @@
     <module>save-and-read-persistent-state</module>
     <module>clustering-tests</module>
     <module>on-termination-example</module>
+    <module>lost-messages-tests</module>
   </modules>
 
   <properties>
